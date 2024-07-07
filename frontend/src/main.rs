@@ -1,12 +1,14 @@
+use gloo_net::http::Request;
+use serde::Deserialize;
 use yew::prelude::*;
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Deserialize)]
 enum Category {
     Blockchain,
     Philosophy,
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Deserialize)]
 struct Article {
     id: usize,
     title: String,
@@ -17,10 +19,11 @@ struct Article {
 #[derive(Properties, PartialEq)]
 struct ArticlesListProps {
     articles: Vec<Article>,
+    on_click: Callback<Article>,
 }
 
 #[function_component(ArticlesList)]
-fn articles_list(ArticlesListProps { articles }: &ArticlesListProps) -> Html {
+fn articles_list(ArticlesListProps { articles, on_click}: &ArticlesListProps) -> Html {
     articles.iter().map(|article| html! {
         <>
             <p>{article.date.clone()}</p>
@@ -45,6 +48,25 @@ fn app() -> Html {
             category: Category::Blockchain,
         },
     ];
+
+    let articles = use_state(|| vec![]);
+    {
+        let articles = articles.clone();
+        use_effect_with((), move |_| {
+            let articles = articles.clone();
+            wasm_bindgen_futures::spawn_local(async move {
+                let fetched_articles: Vec<Article> = Request::get("http://127.0.0.1:8080/posts")
+                    .send()
+                    .await
+                    .unwrap()
+                    .json()
+                    .await
+                    .unwrap();
+                articles.set(fetched_articles);
+            });
+            || ()
+        });
+    }
 
     html! {
         <>

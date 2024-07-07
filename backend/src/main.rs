@@ -6,6 +6,14 @@ async fn index() -> Result<fs::NamedFile, std::io::Error> {
     fs::NamedFile::open("../frontend/dist/index.html")
 }
 
+/// Handler to get a specific post by id
+// #[get("/posts/{id}")]
+// async fn get_post(web::Path(id): web::Path<i32>) -> impl Responder {
+//     // database request based on specific id
+//     // let post = db.get(id);
+//     // HttpResponse::Ok().json(post);
+// }
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
