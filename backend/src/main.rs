@@ -1,5 +1,9 @@
 use actix_web::{get, web, App, HttpResponse, Responder, HttpServer};
 use actix_files as fs;
+use sqlx::postgres::PgPoolOptions;
+use dotenv::dotenv;
+
+use std::env;
 
 async fn index() -> Result<fs::NamedFile, std::io::Error> {
     // serve the index.html from dist directory
@@ -16,6 +20,14 @@ async fn index() -> Result<fs::NamedFile, std::io::Error> {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    dotenv().ok();
+
+    let db_password = env::var("POSTGRES_PASSWORD").expect("Need database password");
+
+    let pool = PgPoolOptions::new()
+        .max_connections(5)
+        .connect(&format!("postgres://postgres:{}@localhost:5432/blogtest", db_password)).await.unwrap();
+
     HttpServer::new(|| {
         App::new()
             .route("/", web::get().to(index)) // todo: determine if we need this, since service seems to handle loading index.html???
