@@ -1,13 +1,42 @@
 use actix_web::{get, web, App, HttpResponse, Responder, HttpServer};
 use actix_files as fs;
-use sqlx::postgres::PgPoolOptions;
+use sqlx::postgres::{PgPoolOptions, PgRow};
+use sqlx::{Pool, Postgres, Row};
 use dotenv::dotenv;
+use serde::{Serialize, Deserialize};
+use futures::TryStreamExt;
 
 use std::env;
 
-async fn index() -> Result<fs::NamedFile, std::io::Error> {
-    // serve the index.html from dist directory
-    fs::NamedFile::open("../frontend/dist/index.html")
+#[derive(Serialize, Deserialize, Debug)]
+struct Post {
+    id: i32,
+    title: String,
+    date: chrono::NaiveDate,
+    tag: String,
+}
+
+#[get("/")]
+async fn index(pool: web::Data<Pool<Postgres>>) -> impl Responder {
+    // fetch all posts metadata
+    let mut stream = sqlx::query("SELECT * from posts_metadata")
+        .map(|row: PgRow| {
+            Post {
+                id: row.get("id"),
+                title: row.get("title"),
+                date: row.get("date"),
+                tag: row.get("tag"),
+            }
+        })
+        .fetch(pool.get_ref());
+
+    let mut posts = Vec::new();
+
+    while let Some(post) = stream.try_next().await.expect("Failed to fetch post") {
+        posts.push(post);
+    }
+
+    HttpResponse::Ok().body(format!("{:?}", posts))
 }
 
 /// Handler to get a specific post by id
@@ -28,10 +57,12 @@ async fn main() -> std::io::Result<()> {
         .max_connections(5)
         .connect(&format!("postgres://postgres:{}@localhost:5432/blogtest", db_password)).await.unwrap();
 
-    HttpServer::new(|| {
+    HttpServer::new(move || {
         App::new()
-            .route("/", web::get().to(index)) // todo: determine if we need this, since service seems to handle loading index.html???
-            .service(fs::Files::new("/", "../frontend/dist").index_file("index.html"))
+            .app_data(web::Data::new(pool.clone()))
+            .service(index) // todo: determine if we need this, since service seems to handle loading index.html???
+            // TODO: put this back in once I get posts to be displayed to frontend
+            // .service(fs::Files::new("/", "../frontend/dist").index_file("index.html"))
     })
     .bind(("127.0.0.1", 8080))?
     .run()
