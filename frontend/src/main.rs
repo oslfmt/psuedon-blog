@@ -1,68 +1,54 @@
 use gloo_net::http::Request;
 use serde::Deserialize;
 use yew::prelude::*;
+use chrono;
 
 #[derive(Clone, PartialEq, Deserialize)]
-enum Category {
+enum Tag {
     Blockchain,
     Philosophy,
 }
 
 #[derive(Clone, PartialEq, Deserialize)]
-struct Article {
+struct Post {
     id: usize,
     title: String,
-    date: String,
-    category: Category,
+    date: chrono::NaiveDate,
+    tag: Tag,
 }
 
 #[derive(Properties, PartialEq)]
-struct ArticlesListProps {
-    articles: Vec<Article>,
-    on_click: Callback<Article>,
+struct PostsListProps {
+    posts: Vec<Post>,
 }
 
-#[function_component(ArticlesList)]
-fn articles_list(ArticlesListProps { articles, on_click}: &ArticlesListProps) -> Html {
-    articles.iter().map(|article| html! {
+#[function_component(PostsList)]
+fn posts_list(PostsListProps { posts}: &PostsListProps) -> Html {
+    posts.iter().map(|post| html! {
         <>
-            <p>{article.date.clone()}</p>
-            <h3 key={article.id}>{format!("{}", article.title)}</h3>
+            <p>{format!("{}", post.date)}</p>
+            <h3 key={post.id}>{format!("{}", post.title)}</h3>
         </>
     }).collect()
 }
 
 #[function_component(App)]
 fn app() -> Html {
-    let articles = vec![
-        Article {
-            id: 1,
-            title: "Floating".to_string(),
-            date: "2024 4 July".to_string(),
-            category: Category::Philosophy,
-        },
-        Article {
-            id: 2,
-            title: "Some thoughts on blockchain".to_string(),
-            date: "2024 10 July".to_string(),
-            category: Category::Blockchain,
-        },
-    ];
+    let posts = use_state(|| vec![]);
 
-    let articles = use_state(|| vec![]);
     {
-        let articles = articles.clone();
+        let posts = posts.clone();
         use_effect_with((), move |_| {
-            let articles = articles.clone();
+            let posts = posts.clone();
             wasm_bindgen_futures::spawn_local(async move {
-                let fetched_articles: Vec<Article> = Request::get("http://127.0.0.1:8080/posts")
+                let fetched_posts: Vec<Post> = Request::get("/")
                     .send()
                     .await
                     .unwrap()
                     .json()
                     .await
                     .unwrap();
-                articles.set(fetched_articles);
+                posts.set(fetched_posts);
             });
             || ()
         });
@@ -71,7 +57,7 @@ fn app() -> Html {
     html! {
         <>
             <h1>{"Psuedon's Website"}</h1>
-            <ArticlesList articles={articles} />
+            <PostsList posts={(*posts).clone()} />
         </>
     }
 }

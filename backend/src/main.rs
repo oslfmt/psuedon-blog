@@ -5,6 +5,7 @@ use sqlx::{Pool, Postgres, Row};
 use dotenv::dotenv;
 use serde::{Serialize, Deserialize};
 use futures::TryStreamExt;
+use actix_cors::Cors;
 
 use std::env;
 
@@ -59,6 +60,12 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
+            .wrap(
+                Cors::default()
+                    .allow_any_origin()
+                    .allow_any_header()
+                    .allow_any_method()
+            )
             .app_data(web::Data::new(pool.clone()))
             .service(index) // todo: determine if we need this, since service seems to handle loading index.html???
             // TODO: put this back in once I get posts to be displayed to frontend
