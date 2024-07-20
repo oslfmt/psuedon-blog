@@ -37,7 +37,7 @@ async fn index(pool: web::Data<Pool<Postgres>>) -> impl Responder {
         posts.push(post);
     }
 
-    HttpResponse::Ok().body(format!("{:?}", posts))
+    HttpResponse::Ok().json(posts)
 }
 
 /// Handler to get a specific post by id

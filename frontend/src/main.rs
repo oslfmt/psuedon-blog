@@ -1,15 +1,16 @@
-use gloo_net::http::Request;
+use gloo_net::http::{Request, Response};
 use serde::Deserialize;
 use yew::prelude::*;
+use web_sys::{console, js_sys::JsString};
 use chrono;
 
-#[derive(Clone, PartialEq, Deserialize)]
+#[derive(Clone, PartialEq, Deserialize, Debug)]
 enum Tag {
-    Blockchain,
-    Philosophy,
+    blockchain,
+    philosophy,
 }
 
-#[derive(Clone, PartialEq, Deserialize)]
+#[derive(Clone, PartialEq, Deserialize, Debug)]
 struct Post {
     id: usize,
     title: String,
@@ -41,22 +42,25 @@ fn app() -> Html {
         use_effect_with((), move |_| {
             let posts = posts.clone();
             wasm_bindgen_futures::spawn_local(async move {
-                let fetched_posts: Vec<Post> = Request::get("/")
+                let fetched_posts: Vec<Post> = Request::get("http://127.0.0.1:8080/")
                     .send()
                     .await
                     .unwrap()
                     .json()
                     .await
                     .unwrap();
+
+                // console::log_1(&format!("{:?}", fetched_posts).into());
                 posts.set(fetched_posts);
             });
             || ()
         });
     }
+    println!("{}", "hello world!");
 
     html! {
         <>
-            <h1>{"Psuedon's Website"}</h1>
+            <h1>{"Victor's Website"}</h1>
             <PostsList posts={(*posts).clone()} />
         </>
     }
