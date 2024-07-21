@@ -10,3 +10,4 @@ serde = "1.0.203"
 wasm-bindgen-futures = "0.4.42"
 chrono = { version = "0.4.38", features = [ "serde" ] }
 web-sys = "0.3"
+yew-router = "0.18.0"

@@ -3,6 +3,16 @@ use serde::Deserialize;
 use yew::prelude::*;
 use web_sys::{console, js_sys::JsString};
 use chrono;
+use yew_router::prelude::*;
+
+#[derive(Clone, Routable, PartialEq)]
+enum Route {
+    #[at("/")]
+    Home,
+    #[not_found]
+    #[at("/404")]
+    NotFound,
+}
 
 #[derive(Clone, PartialEq, Deserialize, Debug)]
 enum Tag {
@@ -33,8 +43,8 @@ fn posts_list(PostsListProps { posts}: &PostsListProps) -> Html {
     }).collect()
 }
 
-#[function_component(App)]
-fn app() -> Html {
+#[function_component(Home)]
+fn home() -> Html {
     let posts = use_state(|| vec![]);
 
     {
@@ -56,13 +66,30 @@ fn app() -> Html {
             || ()
         });
     }
-    println!("{}", "hello world!");
 
     html! {
         <>
             <h1>{"Victor's Website"}</h1>
             <PostsList posts={(*posts).clone()} />
         </>
+    }
+}
+
+fn switch(routes: Route) -> Html {
+    match routes {
+        Route::Home => html! {
+            <Home />
+        },
+        Route::NotFound => html! { <h1>{ "404 Not Found" }</h1> }
+    }
+}
+
+#[function_component(App)]
+fn app() -> Html {
+    html! {
+        <BrowserRouter>
+            <Switch<Route> render={switch} />
+        </BrowserRouter>
     }
 }
 
