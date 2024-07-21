@@ -9,18 +9,22 @@ use yew_router::prelude::*;
 enum Route {
     #[at("/")]
     Home,
+    #[at("/post/:id")]
+    Post { id: usize },
     #[not_found]
     #[at("/404")]
     NotFound,
 }
 
-#[derive(Clone, PartialEq, Deserialize, Debug)]
+#[derive(Clone, PartialEq, Deserialize, Debug, Default)]
 enum Tag {
     blockchain,
     philosophy,
+    #[default]
+    general,
 }
 
-#[derive(Clone, PartialEq, Deserialize, Debug)]
+#[derive(Clone, PartialEq, Deserialize, Debug, Default)]
 struct Post {
     id: usize,
     title: String,
@@ -38,7 +42,9 @@ fn posts_list(PostsListProps { posts}: &PostsListProps) -> Html {
     posts.iter().map(|post| html! {
         <>
             <p>{format!("{}", post.date)}</p>
-            <h3 key={post.id}>{format!("{}", post.title)}</h3>
+            // NOTE: this link here is what sets the URL path to /post/:id when it is clicked
+            <Link<Route> to={Route::Post { id: post.id}}>{format!("{}", post.title)}</Link<Route>>
+            // <h3 key={post.id}>{format!("{}", post.title)}</h3>
         </>
     }).collect()
 }
@@ -75,10 +81,55 @@ fn home() -> Html {
     }
 }
 
+#[derive(Default, Deserialize)]
+struct PostContent {
+    id: usize,
+    content: String,
+}
+
+#[derive(Properties, PartialEq)]
+struct PostProps {
+    id: usize
+}
+
+#[function_component(PostPage)]
+fn post(props: &PostProps) -> Html {
+    let post_content = use_state(|| PostContent::default());
+    {
+        let post_content = post_content.clone();
+        let id = props.id;
+        use_effect_with((), move |_| {
+            // TODO: figure out why we need to clone twice
+            let post_content = post_content.clone();
+            wasm_bindgen_futures::spawn_local(async move {
+                let fetched_post: PostContent = Request::get(&format!("http://127.0.0.1:8080/post/{}", id))
+                    .send()
+                    .await
+                    .unwrap()
+                    .json()
+                    .await
+                    .unwrap();
+
+                post_content.set(fetched_post);
+            });
+            // || () what does this do??
+        });
+    }
+    html! {
+        <>
+            <h1>{"POST TITLE GOES HERE"}</h1>
+            <p>{format!("{}", post_content.content)}</p>
+        </>
+    }
+}
+
 fn switch(routes: Route) -> Html {
     match routes {
         Route::Home => html! {
             <Home />
+        },
+        Route::Post { id } => html! {
+            <PostPage id={id} />
         },
         Route::NotFound => html! { <h1>{ "404 Not Found" }</h1> }
     }
