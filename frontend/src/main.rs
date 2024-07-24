@@ -43,7 +43,7 @@ fn posts_list(PostsListProps { posts}: &PostsListProps) -> Html {
         <>
             <p>{format!("{}", post.date)}</p>
             // NOTE: this link here is what sets the URL path to /post/:id when it is clicked
-            <Link<Route> to={Route::Post { id: post.id}}>{format!("{}", post.title)}</Link<Route>>
+            <Link<Route> to={Route::Post { id: post.id }}>{format!("{}", post.title)}</Link<Route>>
             // <h3 key={post.id}>{format!("{}", post.title)}</h3>
         </>
     }).collect()
@@ -83,7 +83,6 @@ fn home() -> Html {
 
 #[derive(Default, Deserialize)]
 struct PostContent {
-    id: usize,
     content: String,
 }
 
@@ -94,7 +93,7 @@ struct PostProps {
 
 #[function_component(PostPage)]
 fn post(props: &PostProps) -> Html {
-    let post_content = use_state(|| PostContent::default());
+    let post_content = use_state(|| String::new());
     {
         let post_content = post_content.clone();
         let id = props.id;
@@ -102,7 +101,7 @@ fn post(props: &PostProps) -> Html {
             // TODO: figure out why we need to clone twice
             let post_content = post_content.clone();
             wasm_bindgen_futures::spawn_local(async move {
-                let fetched_post: PostContent = Request::get(&format!("http://127.0.0.1:8080/post/{}", id))
+                let fetched_post: String = Request::get(&format!("http://127.0.0.1:8080/post/{}", id))
                     .send()
                     .await
                     .unwrap()
@@ -118,7 +117,7 @@ fn post(props: &PostProps) -> Html {
     html! {
         <>
             <h1>{"POST TITLE GOES HERE"}</h1>
-            <p>{format!("{}", post_content.content)}</p>
+            <p>{format!("{}", *post_content)}</p>
         </>
     }
 }
