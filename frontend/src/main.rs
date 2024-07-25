@@ -101,7 +101,7 @@ fn post(props: &PostProps) -> Html {
             // TODO: figure out why we need to clone twice
             let post_content = post_content.clone();
             wasm_bindgen_futures::spawn_local(async move {
-                let fetched_post: String = Request::get(&format!("http://127.0.0.1:8080/post/{}", id))
+                let fetched_post: String = Request::get(&format!("http://127.0.0.1:8080/posts/{}", id))
                     .send()
                     .await
                     .unwrap()
