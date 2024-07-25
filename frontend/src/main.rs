@@ -9,8 +9,8 @@ use yew_router::prelude::*;
 enum Route {
     #[at("/")]
     Home,
-    #[at("/post/:id")]
-    Post { id: usize },
+    #[at("/posts/:id/:title")]
+    Post { id: usize, title: String },
     #[not_found]
     #[at("/404")]
     NotFound,
@@ -43,8 +43,7 @@ fn posts_list(PostsListProps { posts}: &PostsListProps) -> Html {
         <>
             <p>{format!("{}", post.date)}</p>
             // NOTE: this link here is what sets the URL path to /post/:id when it is clicked
-            <Link<Route> to={Route::Post { id: post.id }}>{format!("{}", post.title)}</Link<Route>>
-            // <h3 key={post.id}>{format!("{}", post.title)}</h3>
+            <Link<Route> to={Route::Post { id: post.id, title: post.title.clone() }}>{format!("{}", post.title)}</Link<Route>>
         </>
     }).collect()
 }
@@ -88,7 +87,8 @@ struct PostContent {
 
 #[derive(Properties, PartialEq)]
 struct PostProps {
-    id: usize
+    id: usize,
+    title: String,
 }
 
 #[function_component(PostPage)]
@@ -116,7 +116,7 @@ fn post(props: &PostProps) -> Html {
     }
     html! {
         <>
-            <h1>{"POST TITLE GOES HERE"}</h1>
+            <h1>{&props.title}</h1>
             <p>{format!("{}", *post_content)}</p>
         </>
     }
@@ -127,8 +127,8 @@ fn switch(routes: Route) -> Html {
         Route::Home => html! {
             <Home />
         },
-        Route::Post { id } => html! {
-            <PostPage id={id} />
+        Route::Post { id , title} => html! {
+            <PostPage id={id} title={title} />
         },
         Route::NotFound => html! { <h1>{ "404 Not Found" }</h1> }
     }
