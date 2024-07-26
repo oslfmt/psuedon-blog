@@ -74,7 +74,7 @@ fn home() -> Html {
 
     html! {
         <>
-            <h1>{"Victor's Website"}</h1>
+            <h1 class="main">{"Victor's Website"}</h1>
             <PostsList posts={(*posts).clone()} />
         </>
     }
