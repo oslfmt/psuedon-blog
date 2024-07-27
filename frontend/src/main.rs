@@ -5,7 +5,7 @@ use routes::Route;
 use pages::home::Home;
 use pages::post_page::PostPage;
 
-// TODO: do we need to declare this pub? What difference does it make?
+// NOTE: these modules don't need to be pub since they are siblings techically
 mod pages;
 mod types;
 mod routes;
