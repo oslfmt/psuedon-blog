@@ -123,10 +123,14 @@ fn post(props: &PostProps) -> Html {
         });
     }
     html! {
-        <>
-            <h1>{&props.title}</h1>
-            <p>{format!("{}", *post_content)}</p>
-        </>
+        <div class="container main-container post-container">
+            <h1 class="post-title">{&props.title}</h1>
+            <p class="home-link">
+                <Link<Route> to={Route::Home}>{"Home"}</Link<Route>>
+            </p>
+            <div class="thin-bar"></div>
+            <p class="post-content">{format!("{}", *post_content)}</p>
+        </div>
     }
 }
 
