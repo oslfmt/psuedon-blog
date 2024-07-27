@@ -1,2 +1,2 @@
 pub mod home;
-mod post_page;
+pub mod post_page;
