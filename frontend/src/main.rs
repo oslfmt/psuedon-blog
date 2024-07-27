@@ -39,13 +39,20 @@ struct PostsListProps {
 
 #[function_component(PostsList)]
 fn posts_list(PostsListProps { posts}: &PostsListProps) -> Html {
-    posts.iter().map(|post| html! {
-        <>
-            <p>{format!("{}", post.date)}</p>
-            // NOTE: this link here is what sets the URL path to /post/:id when it is clicked
-            <Link<Route> to={Route::Post { id: post.id, title: post.title.clone() }}>{format!("{}", post.title)}</Link<Route>>
-        </>
-    }).collect()
+    html! {
+        <ul class="posts-list">
+            {
+                for posts.iter().map(|post| html! {
+                    <li class="post-list-item">
+                        <p class="post-date">{format!("{}", post.date)}</p>
+                        <p class="post-link">
+                            <Link<Route> to={Route::Post { id: post.id, title: post.title.clone() }}>{format!("{}", post.title)}</Link<Route>>
+                        </p>
+                    </li>
+                })
+            }
+        </ul>
+    }
 }
 
 #[function_component(Home)]
@@ -73,10 +80,11 @@ fn home() -> Html {
     }
 
     html! {
-        <>
-            <h1 class="main">{"Victor's Website"}</h1>
+        <div class="container main-container">
+            <h1 class="title">{"Victor's Website"}</h1>
+            <div class="bar"/>
             <PostsList posts={(*posts).clone()} />
-        </>
+        </div>
     }
 }
 
