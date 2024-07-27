@@ -1,97 +1,13 @@
-use gloo_net::http::{Request, Response};
-use serde::Deserialize;
+use gloo_net::http::Request;
 use yew::prelude::*;
-use web_sys::{console, js_sys::JsString};
-use chrono;
 use yew_router::prelude::*;
 
-#[derive(Clone, Routable, PartialEq)]
-enum Route {
-    #[at("/")]
-    Home,
-    #[at("/posts/:id/:title")]
-    Post { id: usize, title: String },
-    #[not_found]
-    #[at("/404")]
-    NotFound,
-}
+use routes::Route;
+use pages::home::Home;
 
-#[derive(Clone, PartialEq, Deserialize, Debug, Default)]
-enum Tag {
-    blockchain,
-    philosophy,
-    #[default]
-    general,
-}
-
-#[derive(Clone, PartialEq, Deserialize, Debug, Default)]
-struct Post {
-    id: usize,
-    title: String,
-    date: chrono::NaiveDate,
-    tag: Tag,
-}
-
-#[derive(Properties, PartialEq)]
-struct PostsListProps {
-    posts: Vec<Post>,
-}
-
-#[function_component(PostsList)]
-fn posts_list(PostsListProps { posts}: &PostsListProps) -> Html {
-    html! {
-        <ul class="posts-list">
-            {
-                for posts.iter().map(|post| html! {
-                    <li class="post-list-item">
-                        <p class="post-date">{format!("{}", post.date)}</p>
-                        <p class="post-link">
-                            <Link<Route> to={Route::Post { id: post.id, title: post.title.clone() }}>{format!("{}", post.title)}</Link<Route>>
-                        </p>
-                    </li>
-                })
-            }
-        </ul>
-    }
-}
-
-#[function_component(Home)]
-fn home() -> Html {
-    let posts = use_state(|| vec![]);
-
-    {
-        let posts = posts.clone();
-        use_effect_with((), move |_| {
-            let posts = posts.clone();
-            wasm_bindgen_futures::spawn_local(async move {
-                let fetched_posts: Vec<Post> = Request::get("http://127.0.0.1:8080/")
-                    .send()
-                    .await
-                    .unwrap()
-                    .json()
-                    .await
-                    .unwrap();
-
-                // console::log_1(&format!("{:?}", fetched_posts).into());
-                posts.set(fetched_posts);
-            });
-            || ()
-        });
-    }
-
-    html! {
-        <div class="container main-container">
-            <h1 class="title">{"Victor's Website"}</h1>
-            <div class="bar"/>
-            <PostsList posts={(*posts).clone()} />
-        </div>
-    }
-}
-
-#[derive(Default, Deserialize)]
-struct PostContent {
-    content: String,
-}
+mod pages;
+mod types; // TODO: do we need to declare this pub? What difference does it make?
+mod routes;
 
 #[derive(Properties, PartialEq)]
 struct PostProps {
