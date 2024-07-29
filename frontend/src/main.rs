@@ -7,6 +7,7 @@ use pages::post_page::PostPage;
 
 // NOTE: these modules don't need to be pub since they are siblings techically
 mod pages;
+mod components;
 mod types;
 mod routes;
 
