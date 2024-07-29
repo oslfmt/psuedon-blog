@@ -1,5 +1,5 @@
 use actix_web::{get, web, App, HttpResponse, Responder, HttpServer};
-use actix_files as fs;
+// use actix_files as fs;
 use sqlx::postgres::{PgPoolOptions, PgRow};
 use sqlx::{Pool, Postgres, Row};
 use dotenv::dotenv;
