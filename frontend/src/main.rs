@@ -1,5 +1,5 @@
 use yew::prelude::*;
-use yew_router::prelude::*;
+use yew_router::prelude::{Switch, BrowserRouter};
 
 use routes::Route;
 use pages::home::Home;
