@@ -3,7 +3,7 @@ use yew_router::prelude::{Switch, BrowserRouter};
 
 use routes::Route;
 use pages::home::Home;
-use pages::post_page::PostPage;
+use pages::{ post_page::PostPage, post_create::PostCreateForm };
 
 // NOTE: these modules don't need to be pub since they are siblings techically
 mod pages;
@@ -18,6 +18,9 @@ fn switch(routes: Route) -> Html {
         },
         Route::Post { id , title} => html! {
             <PostPage id={id} title={title} />
+        },
+        Route::PostCreateForm => html! {
+            <PostCreateForm />
         },
         Route::NotFound => html! { <h1>{ "404 Not Found" }</h1> }
     }
