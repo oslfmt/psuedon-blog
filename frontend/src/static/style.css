@@ -17,7 +17,7 @@ body, html {
   display: flex;
   align-items: center;
   height: 100vh;
-  width: 100%;
+  /* width: 100%; */
 }
 
 .main-container {
@@ -113,4 +113,29 @@ a:active {
   margin-bottom: 0.2em;
   font-size: 0.9em;
   align-self: flex-end;
+}
+
+/* FORM PAGE */
+.form-div {
+  margin: 1em;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  margin-bottom: 0.5em;
+}
+
+.submit-btn {
+  padding: 0.75em;
+  background: #78e08f;
+  border: none;
+  border-radius: 0.3em;
+  width: 25%;
+  align-self: center;
+}
+
+.submit-btn:hover {
+  background: #62d67b;
+  cursor: pointer;
 }
