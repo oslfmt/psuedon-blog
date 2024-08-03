@@ -44,15 +44,15 @@ pub async fn get_post(path: web::Path<i32>, pool: web::Data<Pool<Postgres>>) -> 
 
 #[post("/thisishowidoit")]
 pub async fn create_post(pool: web::Data<Pool<Postgres>>) -> impl Responder {
-    sqlx::query(
-        "INSERT INTO posts_metadata (id, title, date, category)
-            VALUES (1,2,3,4)"
-    ).execute(pool.get_ref()).await.unwrap();
+    // sqlx::query(
+    //     "INSERT INTO posts_metadata (id, title, date, category)
+    //         VALUES (1,2,3,4)"
+    // ).execute(pool.get_ref()).await.unwrap();
 
-    sqlx::query(
-        "INSERT INTO posts (id, content)
-         VALUES (1, content)"
-    ).execute(pool.get_ref()).await.unwrap();
+    // sqlx::query(
+    //     "INSERT INTO posts (id, content)
+    //      VALUES (1, content)"
+    // ).execute(pool.get_ref()).await.unwrap();
 
     HttpResponse::Ok().json("Post created")
 }

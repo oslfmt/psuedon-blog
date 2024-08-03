@@ -32,6 +32,7 @@ pub fn post(props: &PostProps) -> Html {
             // || () what does this do??
         });
     }
+    
     html! {
         <div class="container main-container post-container">
             <h1 class="post-title">{&props.title}</h1>
