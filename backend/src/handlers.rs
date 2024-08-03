@@ -1,6 +1,6 @@
 use sqlx::{Pool, Postgres, Row, postgres::PgRow};
 use futures::TryStreamExt;
-use actix_web::{web, get, post, HttpResponse, Responder};
+use actix_web::{get, post, web, HttpRequest, HttpResponse, Responder};
 
 use crate::models::Post;
 
@@ -43,10 +43,11 @@ pub async fn get_post(path: web::Path<i32>, pool: web::Data<Pool<Postgres>>) -> 
 }
 
 #[post("/thisishowidoit")]
-pub async fn create_post(pool: web::Data<Pool<Postgres>>) -> impl Responder {
+pub async fn create_post(form: web::Form<Post>, pool: web::Data<Pool<Postgres>>) -> impl Responder {
+    let title = &form.title;
     // sqlx::query(
-    //     "INSERT INTO posts_metadata (id, title, date, category)
-    //         VALUES (1,2,3,4)"
+    //     "INSERT INTO posts_metadata (id, title, date, tag)
+    //         VALUES (uuid, )"
     // ).execute(pool.get_ref()).await.unwrap();
 
     // sqlx::query(
@@ -54,5 +55,5 @@ pub async fn create_post(pool: web::Data<Pool<Postgres>>) -> impl Responder {
     //      VALUES (1, content)"
     // ).execute(pool.get_ref()).await.unwrap();
 
-    HttpResponse::Ok().json("Post created")
+    HttpResponse::Ok().json(title)
 }

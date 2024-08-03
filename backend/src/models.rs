@@ -7,3 +7,10 @@ pub struct Post {
     pub date: chrono::NaiveDate,
     pub tag: String,
 }
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct FormPostData {
+    pub title: String,
+    pub date: chrono::NaiveDate,
+    pub tag: String,
+}
