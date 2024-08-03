@@ -1,6 +1,5 @@
-use yew::{function_component, html, Html, Callback};
+use yew::{function_component, html, Html};
 use yew_router::prelude::*;
-use gloo_net::http::Request;
 
 use crate::routes::Route;
 
@@ -19,7 +18,7 @@ pub fn post_create_form() -> Html {
                     <input name="title"/>
                 </div>
                 <div class="form-div">
-                    <label for="tags" class="form-label">{"Date"}</label>
+                    <label for="date" class="form-label">{"Date"}</label>
                     <input name="date" type="date"/>
                 </div>
                 <div class="form-div">
@@ -27,9 +26,9 @@ pub fn post_create_form() -> Html {
                     <textarea name="content" rows="15" cols="80" id="content" />
                 </div>
                 <div class="form-div">
-                    <label for="tags" class="form-label">{"Tags"}</label>
+                    <label for="tag" class="form-label">{"Tag"}</label>
                     // TODO: make this nicer, because it is not nice
-                    <select name="tags" id="tags" multiple=false>
+                    <select name="tag" id="tag" multiple=false>
                         <option value="blockchain">{"blockchain"}</option>
                         <option value="random">{"random"}</option>
                         <option value="philosophy">{"philosophy"}</option>

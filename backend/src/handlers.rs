@@ -1,8 +1,8 @@
 use sqlx::{Pool, Postgres, Row, postgres::PgRow};
 use futures::TryStreamExt;
-use actix_web::{get, post, web, HttpRequest, HttpResponse, Responder};
+use actix_web::{get, post, web, HttpResponse, Responder};
 
-use crate::models::Post;
+use crate::models::{Post, PostFormData};
 
 #[get("/")]
 pub async fn index(pool: web::Data<Pool<Postgres>>) -> impl Responder {
@@ -43,7 +43,7 @@ pub async fn get_post(path: web::Path<i32>, pool: web::Data<Pool<Postgres>>) -> 
 }
 
 #[post("/thisishowidoit")]
-pub async fn create_post(form: web::Form<Post>, pool: web::Data<Pool<Postgres>>) -> impl Responder {
+pub async fn create_post(form: web::Form<PostFormData>, _pool: web::Data<Pool<Postgres>>) -> impl Responder {
     let title = &form.title;
     // sqlx::query(
     //     "INSERT INTO posts_metadata (id, title, date, tag)

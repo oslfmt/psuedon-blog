@@ -9,8 +9,9 @@ pub struct Post {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct FormPostData {
+pub struct PostFormData {
     pub title: String,
+    pub content: String,
     pub date: chrono::NaiveDate,
     pub tag: String,
 }
