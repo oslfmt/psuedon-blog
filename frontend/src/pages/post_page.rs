@@ -6,7 +6,7 @@ use crate::routes::Route;
 
 #[derive(Properties, PartialEq)]
 pub struct PostProps {
-    pub id: usize,
+    pub id: String,
     pub title: String,
 }
 
@@ -15,7 +15,7 @@ pub fn post(props: &PostProps) -> Html {
     let post_content = use_state(|| String::new());
     {
         let post_content = post_content.clone();
-        let id = props.id;
+        let id = props.id.clone();
         use_effect_with((), move |_| {
             let post_content = post_content.clone();
             wasm_bindgen_futures::spawn_local(async move {

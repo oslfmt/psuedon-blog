@@ -10,12 +10,12 @@ pub enum Tag {
     philosophy,
     #[allow(non_camel_case_types)]
     #[default]
-    general,
+    random,
 }
 
 #[derive(Clone, PartialEq, Deserialize, Debug, Default)]
 pub struct Post {
-    pub id: usize,
+    pub id: String,
     pub title: String,
     pub date: chrono::NaiveDate,
     pub tag: Tag,

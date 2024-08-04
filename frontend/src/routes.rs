@@ -5,7 +5,7 @@ pub enum Route {
     #[at("/")]
     Home,
     #[at("/posts/:id/:title")]
-    Post { id: usize, title: String },
+    Post { id: String, title: String },
     #[at("/thisishowidoit")]
     PostCreateForm,
     #[not_found]
