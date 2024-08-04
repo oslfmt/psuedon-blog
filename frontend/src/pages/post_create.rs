@@ -28,10 +28,11 @@ pub fn post_create_form() -> Html {
                 <div class="form-div">
                     <label for="tag" class="form-label">{"Tag"}</label>
                     // TODO: make this nicer, because it is not nice
+                    // TODO: this has a dependency on the enum type for tags on frontend types.rs
                     <select name="tag" id="tag" multiple=false>
-                        <option value="blockchain">{"blockchain"}</option>
-                        <option value="random">{"random"}</option>
-                        <option value="philosophy">{"philosophy"}</option>
+                        <option value="Blockchain">{"blockchain"}</option>
+                        <option value="Random">{"random"}</option>
+                        <option value="Philosophy">{"philosophy"}</option>
                     </select>
                 </div>
                 <div class="form-div">
