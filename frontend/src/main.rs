@@ -16,8 +16,8 @@ fn switch(routes: Route) -> Html {
         Route::Home => html! {
             <Home />
         },
-        Route::Post { id , title} => html! {
-            <PostPage id={id} title={title} />
+        Route::Post { id } => html! {
+            <PostPage id={id} />
         },
         Route::PostCreateForm => html! {
             <PostCreateForm />

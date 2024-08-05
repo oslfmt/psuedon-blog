@@ -4,8 +4,8 @@ use yew_router::Routable;
 pub enum Route {
     #[at("/")]
     Home,
-    #[at("/posts/:id/:title")]
-    Post { id: String, title: String },
+    #[at("/posts/:id")]
+    Post { id: String },
     #[at("/thisishowidoit")]
     PostCreateForm,
     #[not_found]
