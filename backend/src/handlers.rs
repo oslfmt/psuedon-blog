@@ -32,7 +32,11 @@ pub async fn index(pool: web::Data<Pool<Postgres>>) -> impl Responder {
 pub async fn get_post(path: web::Path<i32>, pool: web::Data<Pool<Postgres>>) -> impl Responder {
     let id = path.into_inner();
     let mut content = String::new();
-    let mut rows = sqlx::query("SELECT * FROM posts WHERE posts.id=$1")
+    let mut rows = sqlx::query(
+        "SELECT title, date, content FROM posts
+        INNER JOIN posts_metadata ON posts.id = posts_metadata.id
+        WHERE posts.id=$1"
+    )
         .bind(id)
         .fetch(pool.get_ref());
 
