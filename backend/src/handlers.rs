@@ -29,22 +29,27 @@ pub async fn index(pool: web::Data<Pool<Postgres>>) -> impl Responder {
 }
 
 #[get("/posts/{id}")]
-pub async fn get_post(path: web::Path<i32>, pool: web::Data<Pool<Postgres>>) -> impl Responder {
+pub async fn get_post(path: web::Path<String>, pool: web::Data<Pool<Postgres>>) -> impl Responder {
     let id = path.into_inner();
     let mut content = String::new();
+    let mut title = String::new();
+    let mut date = chrono::NaiveDate::MAX;
+
     let mut rows = sqlx::query(
         "SELECT title, date, content FROM posts
         INNER JOIN posts_metadata ON posts.id = posts_metadata.id
         WHERE posts.id=$1"
     )
-        .bind(id)
-        .fetch(pool.get_ref());
+    .bind(id)
+    .fetch(pool.get_ref());
 
     while let Some(row) = rows.try_next().await.expect("Failed to fetch post.") {
         content = row.try_get("content").unwrap();
+        title = row.get("title");
+        date = row.get("date");
     }
 
-    HttpResponse::Ok().json(content)
+    HttpResponse::Ok().json((content, title, date))
 }
 
 #[post("/thisishowidoit")]
