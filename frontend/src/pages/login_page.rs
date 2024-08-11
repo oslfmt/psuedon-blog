@@ -4,6 +4,7 @@ use gloo_net::http::Request;
 use yew_router::hooks::use_navigator;
 
 use crate::routes::Route;
+use crate::types::LoginData;
 
 #[function_component(LoginPage)]
 pub fn login() -> Html {
@@ -26,7 +27,7 @@ pub fn login() -> Html {
             let login_invalid = login_invalid.clone();
 
             // console::log_1(&"hi".into());
-            let form_data = (username, password);
+            let form_data = LoginData { username, password };
 
             wasm_bindgen_futures::spawn_local(async move {
                 let res = Request::post("http://127.0.0.1:8080/login")

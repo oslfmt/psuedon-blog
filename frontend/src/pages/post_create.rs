@@ -3,6 +3,9 @@ use yew_router::prelude::*;
 
 use crate::routes::Route;
 
+// TODO: USE STATE OR NAVIGATOR MIDDLEWARE TO MAKE SURE THIS PAGE IS NOT ACCESSIBLE
+// BY DIRECTLY PUTTING A URL IN
+
 #[function_component(PostCreateForm)]
 pub fn post_create_form() -> Html {
     html! {

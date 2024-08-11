@@ -1,9 +1,8 @@
 use chrono;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, PartialEq, Deserialize, Debug, Default)]
 pub enum Tag {
-    // TODO: fix this issue by making tags in db capitalized
     Blockchain,
     Philosophy,
     #[default]
@@ -16,4 +15,10 @@ pub struct Post {
     pub title: String,
     pub date: chrono::NaiveDate,
     pub tag: Tag,
+}
+
+#[derive(Clone, PartialEq, Serialize, Debug)]
+pub struct LoginData {
+    pub username: String,
+    pub password: String,
 }
