@@ -21,6 +21,9 @@ fn switch(routes: Route) -> Html {
         Route::PostCreateForm => html! {
             <PostCreateForm />
         },
+        Route::Login => html! {
+            <LoginPage />
+        }
         Route::NotFound => html! { <h1>{ "404 Not Found" }</h1> }
     }
 }

@@ -8,6 +8,8 @@ pub enum Route {
     Post { id: String },
     #[at("/thisishowidoit")]
     PostCreateForm,
+    #[at("/login")]
+    Login,
     #[not_found]
     #[at("/404")]
     NotFound,
