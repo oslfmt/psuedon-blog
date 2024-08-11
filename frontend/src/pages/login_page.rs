@@ -1,8 +1,6 @@
 use web_sys::HtmlInputElement;
 use yew::{function_component, html, use_state, Callback, Html, InputEvent, SubmitEvent, TargetCast};
-// use yew_router::prelude::*;
 use gloo_net::http::Request;
-use web_sys::console;
 use yew_router::hooks::use_navigator;
 
 use crate::routes::Route;
