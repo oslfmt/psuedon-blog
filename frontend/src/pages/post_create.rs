@@ -12,7 +12,7 @@ pub fn post_create_form() -> Html {
                 <Link<Route> to={Route::Home}>{"Home"}</Link<Route>>
             </p>
             <div class="thin-bar"></div>
-            <form action="http://localhost:8080/thisishowidoit" method="post">
+            <form target="_blank" action="http://localhost:8080/thisishowidoit" method="post">
                 <div class="form-div">
                     <label for="title" class="form-label">{"Title"}</label>
                     <input name="title"/>

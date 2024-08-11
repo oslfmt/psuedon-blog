@@ -79,5 +79,5 @@ pub async fn create_post(form: web::Form<PostFormData>, pool: web::Data<Pool<Pos
     .bind(content)
     .execute(pool.get_ref()).await.unwrap();
 
-    HttpResponse::Ok().json(title)
+    HttpResponse::Ok().json("Post added to database!")
 }
