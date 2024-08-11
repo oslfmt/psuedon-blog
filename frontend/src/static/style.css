@@ -139,3 +139,7 @@ a:active {
   background: #62d67b;
   cursor: pointer;
 }
+
+.login-submit:hover {
+  cursor: pointer;
+}

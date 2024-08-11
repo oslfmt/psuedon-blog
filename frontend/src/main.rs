@@ -2,8 +2,7 @@ use yew::prelude::*;
 use yew_router::prelude::{Switch, BrowserRouter};
 
 use routes::Route;
-use pages::home::Home;
-use pages::{ post_page::PostPage, post_create::PostCreateForm };
+use pages::{ home::Home, post_page::PostPage, post_create::PostCreateForm, login_page::LoginPage };
 
 mod pages;
 mod components;
@@ -23,7 +22,7 @@ fn switch(routes: Route) -> Html {
         },
         Route::Login => html! {
             <LoginPage />
-        }
+        },
         Route::NotFound => html! { <h1>{ "404 Not Found" }</h1> }
     }
 }
