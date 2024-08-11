@@ -2,6 +2,13 @@ use sqlx::{Pool, Postgres, Row, postgres::PgRow};
 use futures::TryStreamExt;
 use actix_web::{get, post, web, HttpResponse, Responder};
 use uuid::Uuid;
+use argon2::{
+    password_hash::{
+        rand_core::OsRng,
+        PasswordHash, PasswordHasher, PasswordVerifier, SaltString
+    },
+    Argon2
+};
 
 use crate::models::{Post, PostFormData, LoginData};
 
@@ -55,8 +62,11 @@ pub async fn get_post(path: web::Path<String>, pool: web::Data<Pool<Postgres>>) 
 #[post("/login")]
 pub async fn verify_login(login_data: web::Json<LoginData>) -> impl Responder {
     // let username = &login_data.username;
+    // TODO: move this to be read from a file or something
+    let hash = "$argon2id$v=19$m=19456,t=2,p=1$cQ36/FlQ8l56gN/DFXUfxw$zSWMz1ii2rSyoAE9sYIEIbcjj32g0bM/fsfFOnZC/9U";
+    let parsed_hash = PasswordHash::new(hash).unwrap();
 
-    if login_data.password == "secretman" {
+    if Argon2::default().verify_password(login_data.password.as_bytes(), &parsed_hash).is_ok() {
         HttpResponse::Ok().json("Login success!")
     } else {
         HttpResponse::Unauthorized().json("Invalid credentials")
