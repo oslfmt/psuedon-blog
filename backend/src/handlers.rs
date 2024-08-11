@@ -3,7 +3,7 @@ use futures::TryStreamExt;
 use actix_web::{get, post, web, HttpResponse, Responder};
 use uuid::Uuid;
 
-use crate::models::{Post, PostFormData};
+use crate::models::{Post, PostFormData, LoginData};
 
 #[get("/")]
 pub async fn index(pool: web::Data<Pool<Postgres>>) -> impl Responder {
@@ -53,8 +53,14 @@ pub async fn get_post(path: web::Path<String>, pool: web::Data<Pool<Postgres>>) 
 }
 
 #[post("/login")]
-pub async fn verify_login() -> impl Responder {
-    HttpResponse::Ok().json("login received")
+pub async fn verify_login(login_data: web::Json<LoginData>) -> impl Responder {
+    // let username = &login_data.username;
+
+    if login_data.password == "secretman" {
+        HttpResponse::Ok().json("Login success!")
+    } else {
+        HttpResponse::Unauthorized().json("Invalid credentials")
+    }
 }
 
 #[post("/thisishowidoit")]

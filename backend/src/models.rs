@@ -15,3 +15,9 @@ pub struct PostFormData {
     pub date: chrono::NaiveDate,
     pub tag: String,
 }
+
+#[derive(Clone, PartialEq, Deserialize, Debug)]
+pub struct LoginData {
+    pub username: String,
+    pub password: String,
+}
