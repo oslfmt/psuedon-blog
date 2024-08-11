@@ -29,6 +29,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(pool.clone()))
             .service(handlers::get_post)
             .service(handlers::create_post)
+            .service(handlers::verify_login)
             .service(handlers::index) // todo: determine if we need this, since service seems to handle loading index.html???
             // TODO: put this back in once I get posts to be displayed to frontend
             // .service(fs::Files::new("/", "../frontend/dist").index_file("index.html"))

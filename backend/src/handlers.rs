@@ -52,6 +52,11 @@ pub async fn get_post(path: web::Path<String>, pool: web::Data<Pool<Postgres>>) 
     HttpResponse::Ok().json((content, title, date))
 }
 
+#[post("/login")]
+pub async fn verify_login() -> impl Responder {
+    HttpResponse::Ok().json("login received")
+}
+
 #[post("/thisishowidoit")]
 pub async fn create_post(form: web::Form<PostFormData>, pool: web::Data<Pool<Postgres>>) -> impl Responder {
     let uuid = Uuid::new_v4().to_string();
