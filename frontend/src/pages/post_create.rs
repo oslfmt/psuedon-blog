@@ -15,15 +15,15 @@ pub fn post_create_form() -> Html {
             <form target="_blank" action="http://localhost:8080/thisishowidoit" method="post">
                 <div class="form-div">
                     <label for="title" class="form-label">{"Title"}</label>
-                    <input name="title"/>
+                    <input name="title" required=true/>
                 </div>
                 <div class="form-div">
                     <label for="date" class="form-label">{"Date"}</label>
-                    <input name="date" type="date"/>
+                    <input name="date" type="date"  required=true/>
                 </div>
                 <div class="form-div">
                     <label for="content" class="form-label">{"Content"}</label>
-                    <textarea name="content" rows="15" cols="80" id="content" />
+                    <textarea name="content" rows="15" cols="80" id="content" required=true/>
                 </div>
                 <div class="form-div">
                     <label for="tag" class="form-label">{"Tag"}</label>
