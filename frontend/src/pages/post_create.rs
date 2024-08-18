@@ -1,5 +1,6 @@
-use yew::{function_component, html, Html};
+use yew::{function_component, html, use_effect_with, use_state, Html};
 use yew_router::prelude::*;
+use gloo_net::http::Request;
 
 use crate::routes::Route;
 
@@ -8,6 +9,30 @@ use crate::routes::Route;
 
 #[function_component(PostCreateForm)]
 pub fn post_create_form() -> Html {
+    let navigator = use_navigator().unwrap();
+    let authenticated = use_state(|| false);
+
+    {
+        use_effect_with((), move |_| {
+            wasm_bindgen_futures::spawn_local(async move {
+                let is_authenticated: bool = Request::get("http://localhost:8080/authenticate")
+                    .send()
+                    .await
+                    .unwrap()
+                    .json()
+                    .await
+                    .unwrap();
+
+                authenticated.set(is_authenticated);
+
+                // redirect to home page
+                if !is_authenticated {
+                    navigator.push(&Route::Home);
+                }
+            })
+        })
+    }
+
     html! {
         <div class="container main-container">
             <h1 class="post-title">{"Create new post"}</h1>
