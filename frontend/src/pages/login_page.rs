@@ -40,7 +40,7 @@ pub fn login() -> Html {
                     Ok(r) => {
                         if r.ok() {
                             // login successful, redirect to create_post page
-                            navigator.push(&Route::PostCreateForm);
+                            // navigator.push(&Route::PostCreateForm);
                             login_invalid.set(false);
                         } else {
                             login_invalid.set(true);

@@ -2,6 +2,7 @@ use sqlx::{Pool, Postgres, Row, postgres::PgRow};
 use futures::TryStreamExt;
 use actix_web::{get, post, web, HttpResponse, Responder};
 use uuid::Uuid;
+use actix_session::Session;
 use argon2::{
     password_hash::{
         rand_core::OsRng,
@@ -60,16 +61,27 @@ pub async fn get_post(path: web::Path<String>, pool: web::Data<Pool<Postgres>>) 
 }
 
 #[post("/login")]
-pub async fn verify_login(login_data: web::Json<LoginData>) -> impl Responder {
-    // let username = &login_data.username;
+pub async fn verify_login(login_data: web::Json<LoginData>, session: Session) -> impl Responder {
+    let username = &login_data.username;
     // TODO: move this to be read from a file or something
     let hash = "$argon2id$v=19$m=19456,t=2,p=1$cQ36/FlQ8l56gN/DFXUfxw$zSWMz1ii2rSyoAE9sYIEIbcjj32g0bM/fsfFOnZC/9U";
     let parsed_hash = PasswordHash::new(hash).unwrap();
 
     if Argon2::default().verify_password(login_data.password.as_bytes(), &parsed_hash).is_ok() {
+        // start a session for admin
+        session.insert("user_name", username).unwrap();
         HttpResponse::Ok().json("Login success!")
     } else {
         HttpResponse::Unauthorized().json("Invalid credentials")
+    }
+}
+
+#[get("/authenticate")]
+pub async fn authenticate(session: Session) -> impl Responder {
+    if let Some(_user_name) = session.get::<String>("user_name").unwrap() {
+        HttpResponse::Ok()
+    } else {
+        HttpResponse::Unauthorized()
     }
 }
 
