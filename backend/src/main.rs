@@ -17,7 +17,7 @@ fn session_middleware_local_test() -> SessionMiddleware<CookieSessionStore> {
         key.clone(),
     )
     .cookie_secure(false)
-    .cookie_same_site(SameSite::None)
+    .cookie_same_site(SameSite::Lax)
     .build()
 }
 

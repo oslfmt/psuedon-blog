@@ -4,8 +4,13 @@ use gloo_net::http::Request;
 
 use crate::routes::Route;
 
-// TODO: USE STATE OR NAVIGATOR MIDDLEWARE TO MAKE SURE THIS PAGE IS NOT ACCESSIBLE
-// BY DIRECTLY PUTTING A URL IN
+// TODO: cookie problem
+// 1. request to /authenticate is marked as "cross-site" and cookies aren't sent on cross site, unless
+// --> withCredentials is set to true (could be possible solution)
+// OR, it is marked "cross-site" because of different ports (server on 8080, client on 8000)
+// --> look into how to serve both on the same port. In production, it will be on the same port??
+// 2. navigator.push() fucks shit up --> causes redirect w/o reload? may not send cookie because of that?
+// --> look into ways to not use navigator.push(). 
 
 #[function_component(PostCreateForm)]
 pub fn post_create_form() -> Html {
