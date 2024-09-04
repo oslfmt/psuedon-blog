@@ -13,8 +13,8 @@ use argon2::{
 
 use crate::models::{Post, PostFormData, LoginData};
 
-#[get("/")]
-pub async fn index(pool: web::Data<Pool<Postgres>>) -> impl Responder {
+#[get("/api/posts")]
+pub async fn get_posts(pool: web::Data<Pool<Postgres>>) -> impl Responder {
     // fetch all posts metadata
     let mut stream = sqlx::query("SELECT * from posts_metadata")
         .map(|row: PgRow| {

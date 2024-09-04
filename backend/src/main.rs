@@ -1,6 +1,6 @@
 use actix_session::{SessionMiddleware, storage::CookieSessionStore};
 use actix_web::{cookie::{Key, SameSite}, web, App, HttpServer};
-// use actix_files as fs;
+use actix_files as fs;
 use sqlx::postgres::PgPoolOptions;
 use dotenv::dotenv;
 use actix_cors::Cors;
@@ -54,9 +54,10 @@ async fn main() -> std::io::Result<()> {
             .service(handlers::create_post)
             .service(handlers::verify_login)
             .service(handlers::authenticate)
-            .service(handlers::index) // todo: determine if we need this, since service seems to handle loading index.html???
             // TODO: put this back in once I get posts to be displayed to frontend
-            // .service(fs::Files::new("/", "../frontend/dist").index_file("index.html"))
+            .service(handlers::get_posts)
+            .service(fs::Files::new("/", "../frontend/dist").index_file("index.html"))
+            // .default_service(web::to(home))
     })
     .bind(("127.0.0.1", 8080))?
     .run()

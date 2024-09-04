@@ -13,7 +13,7 @@ pub fn home() -> Html {
         use_effect_with((), move |_| {
             let posts = posts.clone();
             wasm_bindgen_futures::spawn_local(async move {
-                let fetched_posts: Vec<Post> = Request::get("http://127.0.0.1:8080/")
+                let fetched_posts: Vec<Post> = Request::get("http://127.0.0.1:8080/api/posts")
                     .send()
                     .await
                     .unwrap()
