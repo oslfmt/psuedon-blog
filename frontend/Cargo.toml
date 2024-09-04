@@ -9,5 +9,5 @@ gloo-net = "0.5.0"
 serde = "1.0.203"
 wasm-bindgen-futures = "0.4.42"
 chrono = { version = "0.4.38", features = [ "serde" ] }
-web-sys = "0.3"
+web-sys = { version = "0.3", features = [ "RequestCredentials" ] }
 yew-router = "0.18.0"

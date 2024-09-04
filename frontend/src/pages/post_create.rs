@@ -1,16 +1,17 @@
 use yew::{function_component, html, use_effect_with, use_state, Html};
 use yew_router::prelude::*;
+use web_sys::RequestCredentials;
 use gloo_net::http::Request;
 
 use crate::routes::Route;
 
-// TODO: cookie problem
-// 1. request to /authenticate is marked as "cross-site" and cookies aren't sent on cross site, unless
-// --> withCredentials is set to true (could be possible solution)
-// OR, it is marked "cross-site" because of different ports (server on 8080, client on 8000)
-// --> look into how to serve both on the same port. In production, it will be on the same port??
-// 2. navigator.push() fucks shit up --> causes redirect w/o reload? may not send cookie because of that?
-// --> look into ways to not use navigator.push(). 
+// Cookie problem resolution:
+// The issue seemed to have to do with the fact the browser was viewing the requests as cross-site
+// Reason behind this is the domain is seemingly different--it sees localhost and 127.0.0.1 as different
+// even though they point to the same thing.
+// SOLUTION: change all requests to 127.0.0.1, because the browser by default uses this as the host, not
+// the alias of "localhost". If making requests to localhost, then browser will view it as cross-site because
+// localhost != 127.0.0.1
 
 #[function_component(PostCreateForm)]
 pub fn post_create_form() -> Html {
@@ -21,17 +22,19 @@ pub fn post_create_form() -> Html {
         let authenticated = authenticated.clone();
         use_effect_with((), move |_| {
             wasm_bindgen_futures::spawn_local(async move {
-                let res = Request::get("http://localhost:8080/api/authenticate")
+                let res = Request::get("http://127.0.0.1:8080/api/authenticate")
+                    // .credentials(RequestCredentials::Include)
                     .send()
                     .await;
 
                 match res {
                     Ok(response) => {
                         if response.ok() {
+                            // TODO: figure out why session cookie does not persist for duration of session
                             authenticated.set(true);
                         } else {
                             authenticated.set(false);
-                            // navigator.push(&Route::Home);
+                            navigator.push(&Route::Home);
                         }
                     },
                     Err(_e) => {

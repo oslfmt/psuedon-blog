@@ -47,6 +47,7 @@ async fn main() -> std::io::Result<()> {
                     .allow_any_origin()
                     .allow_any_header()
                     .allow_any_method()
+                    // .supports_credentials()
             )
             .wrap(session_middleware_local_test())
             .app_data(web::Data::new(pool.clone()))

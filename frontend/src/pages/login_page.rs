@@ -30,7 +30,7 @@ pub fn login() -> Html {
             let form_data = LoginData { username, password };
 
             wasm_bindgen_futures::spawn_local(async move {
-                let res = Request::post("http://127.0.0.1:8080/login")
+                let res = Request::post("http://127.0.0.1:8080/api/login")
                     .json(&form_data)
                     .expect("Failed to serialize the form data")
                     .send()
