@@ -1,6 +1,7 @@
+use actix_files::NamedFile;
 use sqlx::{Pool, Postgres, Row, postgres::PgRow};
 use futures::TryStreamExt;
-use actix_web::{get, post, web, HttpResponse, Responder};
+use actix_web::{get, post, web, Error, HttpRequest, HttpResponse, Responder};
 use uuid::Uuid;
 use actix_session::Session;
 use argon2::{
@@ -12,6 +13,10 @@ use argon2::{
 };
 
 use crate::models::{Post, PostFormData, LoginData};
+
+pub async fn static_file_fallback(_req: HttpRequest) -> Result<NamedFile, Error> {
+    Ok(NamedFile::open("../frontend/dist/index.html")?)
+}
 
 #[get("/api/posts")]
 pub async fn get_posts(pool: web::Data<Pool<Postgres>>) -> impl Responder {

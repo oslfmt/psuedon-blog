@@ -54,10 +54,9 @@ async fn main() -> std::io::Result<()> {
             .service(handlers::create_post)
             .service(handlers::verify_login)
             .service(handlers::authenticate)
-            // TODO: put this back in once I get posts to be displayed to frontend
             .service(handlers::get_posts)
             .service(fs::Files::new("/", "../frontend/dist").index_file("index.html"))
-            // .default_service(web::to(home))
+            .default_service(web::route().to(handlers::static_file_fallback))
     })
     .bind(("127.0.0.1", 8080))?
     .run()
