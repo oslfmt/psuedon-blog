@@ -41,7 +41,7 @@ pub async fn get_posts(pool: web::Data<Pool<Postgres>>) -> impl Responder {
     HttpResponse::Ok().json(posts)
 }
 
-#[get("/posts/{id}")]
+#[get("/api/posts/{id}")]
 pub async fn get_post(path: web::Path<String>, pool: web::Data<Pool<Postgres>>) -> impl Responder {
     let id = path.into_inner();
     let mut content = String::new();
@@ -65,7 +65,7 @@ pub async fn get_post(path: web::Path<String>, pool: web::Data<Pool<Postgres>>) 
     HttpResponse::Ok().json((content, title, date))
 }
 
-#[post("/login")]
+#[post("/api/login")]
 pub async fn verify_login(login_data: web::Json<LoginData>, session: Session) -> impl Responder {
     let username = &login_data.username;
     // TODO: move this to be read from a file or something
@@ -81,7 +81,7 @@ pub async fn verify_login(login_data: web::Json<LoginData>, session: Session) ->
     }
 }
 
-#[get("/authenticate")]
+#[get("/api/authenticate")]
 pub async fn authenticate(session: Session) -> impl Responder {
     if let Some(_user_name) = session.get::<String>("user_name").unwrap() {
         HttpResponse::Ok()
@@ -90,7 +90,7 @@ pub async fn authenticate(session: Session) -> impl Responder {
     }
 }
 
-#[post("/thisishowidoit")]
+#[post("/api/thisishowidoit")]
 pub async fn create_post(form: web::Form<PostFormData>, pool: web::Data<Pool<Postgres>>) -> impl Responder {
     let uuid = Uuid::new_v4().to_string();
 

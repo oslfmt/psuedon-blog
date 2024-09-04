@@ -21,7 +21,7 @@ pub fn post_create_form() -> Html {
         let authenticated = authenticated.clone();
         use_effect_with((), move |_| {
             wasm_bindgen_futures::spawn_local(async move {
-                let res = Request::get("http://localhost:8080/authenticate")
+                let res = Request::get("http://localhost:8080/api/authenticate")
                     .send()
                     .await;
 
@@ -52,7 +52,7 @@ pub fn post_create_form() -> Html {
                     <Link<Route> to={Route::Home}>{"Home"}</Link<Route>>
                 </p>
                 <div class="thin-bar"></div>
-                <form target="_blank" action="http://localhost:8080/thisishowidoit" method="post">
+                <form target="_blank" action="http://localhost:8080/api/thisishowidoit" method="post">
                     <div class="form-div">
                         <label for="title" class="form-label">{"Title"}</label>
                         <input name="title" required=true/>

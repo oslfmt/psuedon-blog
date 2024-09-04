@@ -26,7 +26,7 @@ pub fn post(props: &PostProps) -> Html {
             let post_title = post_title.clone();
             let post_date = post_date.clone();
             wasm_bindgen_futures::spawn_local(async move {
-                let (content, title, date): (String, String, chrono::NaiveDate) = Request::get(&format!("http://127.0.0.1:8080/posts/{}", id))
+                let (content, title, date): (String, String, chrono::NaiveDate) = Request::get(&format!("http://127.0.0.1:8080/api/posts/{}", id))
                     .send()
                     .await
                     .unwrap()
