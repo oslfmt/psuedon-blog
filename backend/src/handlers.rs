@@ -21,7 +21,7 @@ pub async fn static_file_fallback(_req: HttpRequest) -> Result<NamedFile, Error>
 #[get("/api/posts")]
 pub async fn get_posts(pool: web::Data<Pool<Postgres>>) -> impl Responder {
     // fetch all posts metadata
-    let mut stream = sqlx::query("SELECT * from posts_metadata")
+    let mut stream = sqlx::query("SELECT * from posts_metadata ORDER BY date DESC")
         .map(|row: PgRow| {
             Post {
                 id: row.get("id"),
