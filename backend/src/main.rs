@@ -56,9 +56,10 @@ async fn main() -> std::io::Result<()> {
             .service(handlers::verify_login)
             .service(handlers::authenticate)
             .service(handlers::get_posts)
-            .service(fs::Files::new("/", "../frontend/dist").index_file("index.html"))
+            .service(fs::Files::new("/", "../frontend/dist").index_file("index.html")) // TODO: determine if need this if we use nginx
             .default_service(web::route().to(handlers::static_file_fallback))
     })
+    // @note in production, should bind to 0.0.0.0 and port 80 in order to make server listen on all interfaces
     .bind(("127.0.0.1", 8080))?
     .run()
     .await
